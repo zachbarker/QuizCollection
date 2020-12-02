@@ -4,34 +4,156 @@
         <title>Quiz</title>
     </head>
     <body>
-        <h2> Create a new Quiz: </h2> <button onclick="window.location.href='./archive.html'" style="margin-left: 75%">Existing Quizzes</button> <br>
-        Enter a title: <input id="quiz_title"> <br>
-        Enter a short description: <input id="quiz_description"> <br>
-        <button onClick="addQuestions()">Create Quiz</button>
+        <div id="create_quiz_container">
+            <h2> Create a new Quiz: </h2> <button onclick="window.location.href='./archive.html'" style="margin-left: 75%">Existing Quizzes</button> <br>
+            Enter a title: <input id="quiz_title"> <br>
+            Enter a short description: <input id="quiz_description"> <br>
+            <button onClick="addQuestions()">Create Quiz</button>
+        </div>
+
+        <div id="quiz_info_container" style="display: none">
+
+        </div>
 
         <div id="add_question" style="display: none">
             <h2> Insert a new question: </h2> <br>
             Enter the question: <input id="input_question"> <br>
             Enter the correct answer: <input id="input_answer"> <br> 
             Enter an incorrect answer: <input id="input_incorrect_one"> <br>
-            Enter an incorrect answer: <input id="input_incorrect_one"> <br>
-            <button onClick="inputQuestion()">Input Question</button>
-            
+            Enter an incorrect answer: <input id="input_incorrect_two"> <br>
+            <button onClick="inputQuestion()">Input Question</button> 
+
+        </div>
+        <div id="question_container" style="display: none">
+            <button onClick="submitQuiz()"> Complete Quiz </button>   
         </div>
 
         <script>
+
+            var counter = 1;
+            var questions = [];
+            const baseServerUrl = 'http://localhost:4444/v1';
+            var currentQuizId;
+            
+
             // renders question creating inputs when quiz submitted
             function addQuestions() {
-                //TODO add functionality to insert quiz into DB
 
-                document.getElementById("add_question").style.display = "block";
+                // handles fdisplaying Quiz information on page
+                document.getElementById("create_quiz_container").style.display = "none";
+                var info = document.getElementById("quiz_info_container");
+                var title = document.getElementById("quiz_title").value.trim();
+                var desc = document.getElementById("quiz_description").value.trim();
+
+                //TODO add functionality to insert quiz into DB
+                const url = baseServerUrl + "/quizzes";
+
+                let data = {
+                    title: title,
+                    description: desc,
+                }
+                const formBody = Object.keys(data).map(key => encodeURIComponent(key) + '=' + encodeURIComponent(data[key])).join('&');
+
+                let fetchData = {
+                    method: 'POST',
+                    body: formBody,
+                    headers: {
+                        'Accept' : '*/*',
+                        'x-auth-token' : getTokenCookie(),
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    }
+                }
+                fetch(url, fetchData).then(function(res){
+                    return res.json();
+                }).then(function (data) {
+                    console.log(data);
+                    let quizId = data.insertId;
+
+                    if (quizId) {
+                        currentQuizId = quizId;
+                        info.innerHTML += "<h1> Title: " + title + "</h1>";
+                        info.innerHTML += "<h3> Description: " + desc + "</h3><br>";
+                        info.style.display = "block";
+
+                        document.getElementById("add_question").style.display = "block";
+                        document.getElementById("question_container").style.display = "block";
+                    } else {
+                        alert("Failed to insert quiz.");
+                    }
+                });
             }
 
 
             function inputQuestion() {
-                // TODO add functionality to input question into DB.
-                // TODO add functionality to display question in a list
 
+                // handles displaying each question on the page as they are created
+                var question = document.getElementById("input_question").value;
+                var answer = document.getElementById("input_answer").value;
+                var incorrect1 = document.getElementById("input_incorrect_one").value;
+                var incorrect2 = document.getElementById("input_incorrect_two").value;
+                container = document.getElementById("question_container");
+
+                var temp = document.createElement('p');
+                temp.style.margin = "8px";
+                temp.innerHTML += "Q" + counter + ") " + question + "<br>";
+                temp.innerHTML += "<b>Answer:</b> " + answer + "<br>";
+                temp.innerHTML += "<b>Incorrect:</b> " + incorrect1 + "<br>";
+                temp.innerHTML += "<b>Incorrect:</b> " + incorrect2 + "<br>";
+
+                container.appendChild(temp);
+                counter++;
+
+                var questionModel = {
+                    question: question,
+                    answer: answer,
+                    incorrect1: incorrect1,
+                    incorrect2: incorrect2,
+                    quizId: currentQuizId,
+                };
+
+                questions.push(questionModel);
+
+                document.getElementById('input_question').value = "";
+                document.getElementById("input_answer").value = "";
+                document.getElementById("input_incorrect_one").value = "";
+                document.getElementById("input_incorrect_two").value = "";
+            }
+
+            // submits all questions into the DB with the current quizId.
+            function submitQuiz() {
+                for (i=0; i < questions.length; i++) {
+                    sendQuestionToServer(questions[i]);
+                }
+                // TODO reload archive page after quiz submission.
+            }
+
+            function sendQuestionToServer(question) {
+                // TODO add functionality to submiit array questions to DB.
+                const url = baseServerUrl + "/questions";
+
+                let data = {
+                    question: question.question,
+                    answer: question.answer,
+                    incorrectOne: question.incorrect1,
+                    incorrectTwo: question.incorrect2,
+                    quizId: question.quizId,
+                }
+                const formBody = Object.keys(data).map(key => encodeURIComponent(key) + '=' + encodeURIComponent(data[key])).join('&');
+
+                let fetchData = {
+                    method: 'POST',
+                    body: formBody,
+                    headers: {
+                        'Accept' : '*/*',
+                        'x-auth-token' : getTokenCookie(),
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    }
+                }
+                fetch(url, fetchData).then(function(res){
+                    return res.json();
+                }).then(function (data) {
+                    console.log(question);
+                });
             }
 
             // returns Token cookie.

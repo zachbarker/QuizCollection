@@ -15,15 +15,19 @@
             <div id="question_container">
 
             </div>
+            <div id="button_container" style="display: none">
+                <button onclick="window.location.href='./archive.html'">Return to Quizzes</button>
+            </div>
+            
 
         </div>
     <script>
 
         const baseServerUrl = 'http://localhost:4444/v1';
 
-        function onLoad() {
+        // loads the existing quiz from the users and populates archive page
+        async function onLoad() {
             const url =  baseServerUrl + "/quizzes";     // edit for hosting
-
             let fetchData = {
                 method: 'GET',
                 headers: {
@@ -36,23 +40,62 @@
             }).then(function (data) {
                 console.log(data);
                 let list = document.getElementById("quiz_list");
-
                 for(i=0; i < data.quizzes.length; i++){
-
                     let temp = document.createElement("li");
+                    let divName = "quiz_" + i;
                     temp.style.margin = "10px";
-                    temp.innerHTML += data.quizzes[i].title + "<br>" ;
+
+                    temp.innerHTML += "<b>" + data.quizzes[i].title + "</b><br>";
 
                     if(data.quizzes[i].description) {
                         temp.innerHTML += data.quizzes[i].description + "<br>";
                     } 
-
                     list.appendChild(temp);
+
+                    // hidden div for quiz and questions
+                    var tempQuiz = document.createElement("div");
+                    tempQuiz.id = "quiz_" + i;
+                    tempQuiz.style.display = "none";
+                    tempQuiz.innerHTML += "<h3>" + data.quizzes[i].title + "</h3>";
+                    tempQuiz.innerHTML += "<h2>" + data.quizzes[i].description;
+                    var tempId = data.quizzes[i].id;
+
+                    const url2 =  baseServerUrl + "/quizzes/" + tempId + "/questions";     // edit for hosting          
+                    console.log(url2);
+                    let fetchData2 = {
+                        method: 'GET',
+                        headers: {
+                            'Accept' : '*/*',
+                            'x-auth-token' : getTokenCookie(),
+                        }
+                    }
+                    fetch(url2, fetchData2).then(function(res){
+                        return res.json();
+                    }).then(function (data) {
+                        console.log(data);
+                        const questionArray = data.questions;
+                        for(x=0; x < questionArray.length; x++){
+                            questionDiv = document.createElement("div");
+                            questionDiv.style.margin = "8px";
+                            questionDiv.innerHTML += "<b> Q" + (x + 1) + ")</b> " + questionArray[x].question + "<br>";
+                            questionDiv.innerHTML += "<b> Answer: </b>" + questionArray[x].answer + "<br>";
+                            questionDiv.innerHTML += "<b> Incorrect: </b>" + questionArray[x].incorrectOne + "<br>";
+                            questionDiv.innerHTML += "<b> Incorrect: </b>" + questionArray[x].incorrectTwo + "<br>";
+                            tempQuiz.appendChild(questionDiv);
+                        }
+                        document.getElementById("question_container").appendChild(tempQuiz);
+                        temp.addEventListener("click", function(e) {
+                            tempQuiz.style.display = "block";
+                            document.getElementById("button_container").style.display = "block";
+                            document.getElementById("quiz_container").style.display = "none";
+                        });  
+                    });
+
                 }
             })
         }
 
-                    // returns Token cookie.
+        // returns Token cookie.
         function getTokenCookie(){
             return document.cookie;
         }

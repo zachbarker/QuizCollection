@@ -1,19 +1,31 @@
 var express = require('express');
-var router = express.Router();
+var router = express.Router({mergeParams: true});
 var db = require('../../database/db');
 
 // GET
 router.get('/', function(req, res, next) {
 
     let userId = req.userId;
+    let quizId = req.params.quizId;
 
-    db.query(`SELECT * FROM Question WHERE userId = ${userId} AND deletedAt IS NULL`, function (err, result, field) {
+    if(quizId) {
+      db.query(`SELECT * FROM Question WHERE userId = ${userId} AND quizId = ${quizId} AND deletedAt IS NULL`, function (err, result, field) {
         if(err){
             throw(err);
         } else {
             res.json({questions: result});
         }
-    })
+    });
+    } else {
+      db.query(`SELECT * FROM Question WHERE userId = ${userId} AND deletedAt IS NULL`, function (err, result, field) {
+        if(err){
+            throw(err);
+        } else {
+            res.json({questions: result});
+        }
+      });
+    }
+
 });
 
 // POST

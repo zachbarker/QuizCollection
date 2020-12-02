@@ -3,6 +3,9 @@ var router = express.Router();
 var db = require('../../database/db');
 
 var currentQuizzes = [];
+var questionRouter = require('../questions/index');
+
+router.use('/:quizId/questions', questionRouter);
 
 // Returns the quiz for the given ID
 router.get('/:quizId', function(req, res, next) {
@@ -28,7 +31,6 @@ router.get('/', function(req, res, next) {
     }
   })
 });
-
 
 // POST
 router.post('/', function(req, res, next){
