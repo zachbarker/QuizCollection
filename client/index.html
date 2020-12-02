@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title> Landing Page</title>
+    </head>
+    <body>
+        <h1>Welcome to QuizCreator V1</h1>
+        <h2>Sign-In Here:</h2>
+        Enter Email:   <input id="email_input"> <br>
+        Enter Password: <input id="password_input"> <br>
+        <button id="login_button" onclick="onSignIn()">Sign-In</button> <br>Need an account? <br>
+        <button id="register_button" onClick="document.getElementById('hidden').style.display = 'block'">Register Now</button>
+
+        <div id="hidden" style="display: none">
+            <h2>Register for an account: </h2> <br>
+            Enter your email: <input id="register_email"> <br>
+            Choose a password: <input id="register_password"> <br>
+            <button id="register_button" onClick="onSignUp()">Register</button>
+        </div>
+ 
+        <script>
+
+            const baseServerUrl = 'http://localhost:4444/v1';
+            const baseClientUrl = 'http://127.0.0.1:5500/client';
+
+            function registerBox() {
+                document.getElementById("hidden_register_box");
+                temp.style.display = "block";
+            }
+
+            // handles signing in
+            function onSignIn(){
+                
+                var email = document.getElementById("email_input").value.trim();
+                var password = document.getElementById("password_input").value.trim();
+  
+                const url =  baseServerUrl + "/auth/signin";     // edit for hosting
+                let data = {
+                    email: email,
+                    password: password
+                }
+                const formBody = Object.keys(data).map(key => encodeURIComponent(key) + '=' + encodeURIComponent(data[key])).join('&');
+                let fetchData = {
+                    method: 'POST',
+                    body: formBody,   
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'Accept' : '*/*',
+                    }
+                }
+                fetch(url, fetchData).then(function(res){
+                    return res.json();
+                }).then(function (data) {
+                    console.log(data);
+                    if(data.error) {
+                        alert("Invalid email or password, please try again or register below.");
+                    } else if(data.token){
+                        let token = data.token;
+                        document.cookie = token;
+                        window.location.href= "./archive.html"; // edit for hosting
+                        console.log("test");
+                    }
+                })
+                console.log(fetchData);
+            }
+
+            // handlees signgin up
+            function onSignUp(){
+        
+                var email = document.getElementById("register_email").value.trim();
+                var password = document.getElementById("register_password").value.trim();
+
+                const url =  baseServerUrl + "/auth/signup";     // edit for hostings
+                let data = {
+                    email: email,
+                    password: password
+                }
+                const formBody = Object.keys(data).map(key => encodeURIComponent(key) + '=' + encodeURIComponent(data[key])).join('&');
+                let fetchData = {
+                    method: 'POST',
+                    body: formBody,   
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'Accept' : '*/*',
+                    }
+                }
+                fetch(url, fetchData).then(function(res){
+                    return res.json();
+                }).then(function (data) {
+                    console.log(data);
+                    if(data.error) {
+                        alert("Invalid email or password, please try again or register below.");
+                    } else if(data.token){
+                        let token = data.token;
+                        document.cookie = token;
+                        window.location.href = "./create_quiz.html"; // edit for hosting
+                        console.log("test");
+                    }
+                })
+                console.log(fetchData);
+            }
+
+        </script>
+    </body>
+
+</html>

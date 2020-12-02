@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Quiz</title>
+    </head>
+    <body>
+        <h2> Create a new Quiz: </h2> <button onclick="window.location.href='./archive.html'" style="margin-left: 75%">Existing Quizzes</button> <br>
+        Enter a title: <input id="quiz_title"> <br>
+        Enter a short description: <input id="quiz_description"> <br>
+        <button onClick="addQuestions()">Create Quiz</button>
+
+        <div id="add_question" style="display: none">
+            <h2> Insert a new question: </h2> <br>
+            Enter the question: <input id="input_question"> <br>
+            Enter the correct answer: <input id="input_answer"> <br> 
+            Enter an incorrect answer: <input id="input_incorrect_one"> <br>
+            Enter an incorrect answer: <input id="input_incorrect_one"> <br>
+            <button onClick="inputQuestion()">Input Question</button>
+            
+        </div>
+
+        <script>
+            // renders question creating inputs when quiz submitted
+            function addQuestions() {
+                //TODO add functionality to insert quiz into DB
+
+                document.getElementById("add_question").style.display = "block";
+            }
+
+
+            function inputQuestion() {
+                // TODO add functionality to input question into DB.
+                // TODO add functionality to display question in a list
+
+            }
+
+            // returns Token cookie.
+            function getTokenCookie(){
+                return document.cookie;
+            }
+
+        </script>
+    </body>
+</html>

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+    <head>
+
+    </head>
+    <body onload="onLoad()">
+        <div id="main_container">
+
+            <div id="quiz_container">
+                <ul id="quiz_list">
+                    <span style="font-size: 20px; margin-right: 200px">Quizzes:</span> <button onclick="window.location.href='./create_quiz.html'">Add New Quiz </a>
+                </ul>
+            </div>
+
+            <div id="question_container">
+
+            </div>
+
+        </div>
+    <script>
+
+        const baseServerUrl = 'http://localhost:4444/v1';
+
+        function onLoad() {
+            const url =  baseServerUrl + "/quizzes";     // edit for hosting
+
+            let fetchData = {
+                method: 'GET',
+                headers: {
+                    'Accept' : '*/*',
+                    'x-auth-token' : getTokenCookie()
+                }
+            }
+            fetch(url, fetchData).then(function(res){
+                return res.json();
+            }).then(function (data) {
+                console.log(data);
+                let list = document.getElementById("quiz_list");
+
+                for(i=0; i < data.quizzes.length; i++){
+
+                    let temp = document.createElement("li");
+                    temp.style.margin = "10px";
+                    temp.innerHTML += data.quizzes[i].title + "<br>" ;
+
+                    if(data.quizzes[i].description) {
+                        temp.innerHTML += data.quizzes[i].description + "<br>";
+                    } 
+
+                    list.appendChild(temp);
+                }
+            })
+        }
+
+                    // returns Token cookie.
+        function getTokenCookie(){
+            return document.cookie;
+        }
+
+    </script>
+    </body>
+</html>
