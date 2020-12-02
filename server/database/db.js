@@ -1,6 +1,7 @@
 const mysql = require('mysql');
+require('dotenv').config();
 const connection = mysql.createConnection({host: "localhost", database: "quizzes", user: "root", 
-                                        password: "root", port: "/Applications/MAMP/tmp/mysql/mysql.sock"});
+                                        password: process.env.DB_PASSWORD, port: process.env.DB_PORT});
 connection.connect(function (err){
     if(err) {
         throw(err);
