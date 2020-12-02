@@ -63,9 +63,9 @@
                         'Content-Type': 'application/x-www-form-urlencoded',
                     }
                 }
-                fetch(url, fetchData).then(function(res){
+                fetch(url, fetchData).then((res) => {
                     return res.json();
-                }).then(function (data) {
+                }).then((data) => {
                     console.log(data);
                     let quizId = data.insertId;
 
@@ -120,14 +120,14 @@
             }
 
             // submits all questions into the DB with the current quizId.
-            function submitQuiz() {
+            let submitQuiz = () => {
                 for (i=0; i < questions.length; i++) {
                     sendQuestionToServer(questions[i]);
                 }
                 // TODO reload archive page after quiz submission.
             }
 
-            function sendQuestionToServer(question) {
+            let sendQuestionToServer = question => {
                 // TODO add functionality to submiit array questions to DB.
                 const url = baseServerUrl + "/questions";
 
@@ -149,7 +149,7 @@
                         'Content-Type': 'application/x-www-form-urlencoded',
                     }
                 }
-                fetch(url, fetchData).then(function(res){
+                fetch(url, fetchData).then((res) => {
                     return res.json();
                 }).then(function (data) {
                     console.log(question);
@@ -157,7 +157,7 @@
             }
 
             // returns Token cookie.
-            function getTokenCookie(){
+            let getTokenCookie = () => {
                 return document.cookie;
             }
 

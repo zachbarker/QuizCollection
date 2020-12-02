@@ -8,10 +8,10 @@ var questionRouter = require('../questions/index');
 router.use('/:quizId/questions', questionRouter);
 
 // Returns the quiz for the given ID
-router.get('/:quizId', function(req, res, next) {
+router.get('/:quizId', (req, res, next) => {
   const userId = req.userId;
   const quizId = req.params.quizId;
-  db.query(`SELECT * FROM Quiz WHERE id = ${quizId} AND userId = ${userId}`, function (err, result, field) {
+  db.query(`SELECT * FROM Quiz WHERE id = ${quizId} AND userId = ${userId}`, (err, result, field) => {
     if(err){
       throw(err);
     } else {
@@ -23,7 +23,7 @@ router.get('/:quizId', function(req, res, next) {
 // Returns all quizzes when no quizId is specified
 router.get('/', function(req, res, next) {
   const userId = req.userId;
-  db.query(`SELECT * FROM Quiz WHERE userId = ${userId}`, function (err, result, field) {
+  db.query(`SELECT * FROM Quiz WHERE userId = ${userId}`, (err, result, field) => {
     if(err){
       throw(err);
     } else {
@@ -38,7 +38,7 @@ router.post('/', function(req, res, next){
   let description = req.body.description;
   const userId = req.userId;
   if (!description) {
-    db.query(`INSERT INTO Quiz(title, userId) VALUES("${title}", ${userId})`, function (err, result, field) {
+    db.query(`INSERT INTO Quiz(title, userId) VALUES("${title}", ${userId})`, (err, result, field) => {
       if(err){
         throw(err);
       } else {
@@ -47,7 +47,7 @@ router.post('/', function(req, res, next){
       }
     })
   } else {
-    db.query(`INSERT INTO Quiz(title, description, userId) VALUES("${title}", "${description}", ${userId})`, function (err, result, field) {
+    db.query(`INSERT INTO Quiz(title, description, userId) VALUES("${title}", "${description}", ${userId})`, (err, result, field) => {
       if(err){
         throw(err);
       } else {
@@ -59,17 +59,17 @@ router.post('/', function(req, res, next){
 });
 
 // PUT
-router.put('/', function(req, res, next){
+router.put('/', (req, res, next) => {
   res.json({data: "this is a PUT request"});
 });
 
 // DELETE
-router.delete('/', function(req, res, next){
+router.delete('/', (req, res, next) => {
   res.json({data: "this is a DELETE request"});
 });
 
 // PATCH
-router.patch('/', function(req, res, next){
+router.patch('/', (req, res, next) => {
   res.json({data: "this is a PATCH request"});
 });
 

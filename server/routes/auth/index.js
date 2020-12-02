@@ -8,7 +8,7 @@ const bcrypt = require('bcrypt');
 
 
 // SIGN-IN --------------------------------------
-router.post('/signin', async function(req, res, next) {
+router.post('/signin', async (req, res, next) => {
 
     console.log("sign in called.");
 
@@ -19,7 +19,7 @@ router.post('/signin', async function(req, res, next) {
         return res.status(400).json({error: "invalid email"});
     }
 
-    db.query(`SELECT id, password From User WHERE email = "${email}"`, function (err, result, fields) { 
+    db.query(`SELECT id, password From User WHERE email = "${email}"`, (err, result, fields) => { 
         if(err) {
             throw(err);
         }
@@ -40,14 +40,14 @@ router.post('/signin', async function(req, res, next) {
 });
 
 // SIGN-UP --------------------------------------
-router.post('/signup', function(req, res, next) {
+router.post('/signup', (req, res, next) => {
 
     // TODO - handle sign up logic with actual database
     const { email, password } = req.body;
     const salt = bcrypt.genSaltSync(10);
     const hash = bcrypt.hashSync(password, salt);
 
-    db.query(`INSERT INTO User (email, password) VALUES ("${email}", "${hash}")`, function (err, result, fields) { 
+    db.query(`INSERT INTO User (email, password) VALUES ("${email}", "${hash}")`, (err, result, fields) => { 
         if(err) {
             if(err.code == "ER_DUP_ENTRY"){
                 res.status(500).json({error: "This email is already registered to an account."});
@@ -67,7 +67,7 @@ router.post('/signup', function(req, res, next) {
 module.exports = router;
 
 // email validator
-function validEmail(email) {
+let validEmail = email => {
     if (/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(email)) {
         return (true);
     }
@@ -75,7 +75,7 @@ function validEmail(email) {
 }
 
 
-function createAuthToken(userId) {
+let createAuthToken = userId => {
     const jwt = require("jsonwebtoken");
     return jwt.sign({
         userId: userId

@@ -26,7 +26,7 @@
         const baseServerUrl = 'http://localhost:4444/v1';
 
         // loads the existing quiz from the users and populates archive page
-        async function onLoad() {
+        function onLoad() {
             const url =  baseServerUrl + "/quizzes";     // edit for hosting
             let fetchData = {
                 method: 'GET',
@@ -35,9 +35,9 @@
                     'x-auth-token' : getTokenCookie()
                 }
             }
-            fetch(url, fetchData).then(function(res){
+            fetch(url, fetchData).then((res) => {
                 return res.json();
-            }).then(function (data) {
+            }).then((data) => {
                 console.log(data);
                 let list = document.getElementById("quiz_list");
                 for(i=0; i < data.quizzes.length; i++){
@@ -69,9 +69,9 @@
                             'x-auth-token' : getTokenCookie(),
                         }
                     }
-                    fetch(url2, fetchData2).then(function(res){
+                    fetch(url2, fetchData2).then((res) => {
                         return res.json();
-                    }).then(function (data) {
+                    }).then((data) => {
                         console.log(data);
                         const questionArray = data.questions;
                         for(x=0; x < questionArray.length; x++){
@@ -84,7 +84,7 @@
                             tempQuiz.appendChild(questionDiv);
                         }
                         document.getElementById("question_container").appendChild(tempQuiz);
-                        temp.addEventListener("click", function(e) {
+                        temp.addEventListener("click", (e) => {
                             tempQuiz.style.display = "block";
                             document.getElementById("button_container").style.display = "block";
                             document.getElementById("quiz_container").style.display = "none";
@@ -96,7 +96,7 @@
         }
 
         // returns Token cookie.
-        function getTokenCookie(){
+        let getTokenCookie = () => {
             return document.cookie;
         }
 

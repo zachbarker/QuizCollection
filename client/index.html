@@ -23,13 +23,13 @@
             const baseServerUrl = 'http://localhost:4444/v1';
             const baseClientUrl = 'http://127.0.0.1:5500/client';
 
-            function registerBox() {
+            let registerBox = () => {
                 document.getElementById("hidden_register_box");
                 temp.style.display = "block";
             }
 
             // handles signing in
-            function onSignIn(){
+            let onSignIn = () => {
                 
                 var email = document.getElementById("email_input").value.trim();
                 var password = document.getElementById("password_input").value.trim();
@@ -48,9 +48,9 @@
                         'Accept' : '*/*',
                     }
                 }
-                fetch(url, fetchData).then(function(res){
+                fetch(url, fetchData).then((res) => {
                     return res.json();
-                }).then(function (data) {
+                }).then((data) => {
                     console.log(data);
                     if(data.error) {
                         alert("Invalid email or password, please try again or register below.");
@@ -65,7 +65,7 @@
             }
 
             // handlees signgin up
-            function onSignUp(){
+            let onSignUp = () => {
         
                 var email = document.getElementById("register_email").value.trim();
                 var password = document.getElementById("register_password").value.trim();
@@ -84,9 +84,9 @@
                         'Accept' : '*/*',
                     }
                 }
-                fetch(url, fetchData).then(function(res){
+                fetch(url, fetchData).then((res) => {
                     return res.json();
-                }).then(function (data) {
+                }).then((data) => {
                     console.log(data);
                     if(data.error) {
                         alert("Invalid email or password, please try again or register below.");
