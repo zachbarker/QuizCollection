@@ -11,7 +11,7 @@ router.use('/:quizId/questions', questionRouter);
 router.get('/:quizId', (req, res, next) => {
   const userId = req.userId;
   const quizId = req.params.quizId;
-  db.query(`SELECT * FROM Quiz WHERE id = ${quizId} AND userId = ${userId}`, (err, result, field) => {
+  db.query(`SELECT * FROM Quiz WHERE id = ${quizId} AND userId = ${userId} AND deletedAt IS NULL`, (err, result, field) => {
     if(err){
       throw(err);
     } else {
@@ -23,7 +23,7 @@ router.get('/:quizId', (req, res, next) => {
 // Returns all quizzes when no quizId is specified
 router.get('/', function(req, res, next) {
   const userId = req.userId;
-  db.query(`SELECT * FROM Quiz WHERE userId = ${userId}`, (err, result, field) => {
+  db.query(`SELECT * FROM Quiz WHERE userId = ${userId} AND deletedAt IS NULL`, (err, result, field) => {
     if(err){
       throw(err);
     } else {
@@ -64,8 +64,18 @@ router.put('/', (req, res, next) => {
 });
 
 // DELETE
-router.delete('/', (req, res, next) => {
-  res.json({data: "this is a DELETE request"});
+router.delete('/:id', (req, res, next) => {
+  let userId = req.userId;
+  let quizId = req.params.id;
+
+  db.query(`UPDATE Quiz SET deletedAt = CURRENT_TIMESTAMP WHERE id = ${quizId} AND userId = ${userId}`, 
+      (err, result, fields) => {
+          if(err){
+              throw(err);
+            } else {
+              res.json({deletedId: quizId});
+            }
+      });
 });
 
 // PATCH

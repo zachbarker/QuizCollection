@@ -1,31 +1,35 @@
 <!DOCTYPE html>
 <html>
     <head>
-
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
     </head>
     <body onload="onLoad()">
         <div id="main_container">
 
             <div id="quiz_container">
                 <ul id="quiz_list">
-                    <span style="font-size: 20px; margin-right: 200px">Quizzes:</span> <button onclick="window.location.href='./create_quiz.html'">Add New Quiz </a>
+                    <span style="font-size: 20px; margin-right: 200px">Quizzes:</span> <button onclick="window.location.href='./create_quiz.html'">Add New Quiz </button></span>
                 </ul>
             </div>
 
-            <div id="question_container">
+            <div id="question_container" style="display: none">
 
             </div>
             <div id="button_container" style="display: none">
                 <button onclick="window.location.href='./archive.html'">Return to Quizzes</button>
             </div>
-            
+            <div id="delete_container">
+                <button id="show_questions" onclick="showQuestions()">Show Questions</button>
+                <br>Enter ID of quiz to delete: <input id="delete_id"><button id="delete_quiz" onclick="deleteQuiz()">Delete Quiz</button>
+                <br> Enter ID of question to delete: <input id="delete_question_id"><button id="delete_question" onclick="deleteQuestion()">Delete Question</button>
+            </div>
 
         </div>
     <script>
 
         const baseServerUrl = 'http://localhost:4444/v1';
 
-        // loads the existing quiz from the users and populates archive page
+        // loads the existing quizzes for the current user.
         function onLoad() {
             const url =  baseServerUrl + "/quizzes";     // edit for hosting
             let fetchData = {
@@ -41,11 +45,19 @@
                 console.log(data);
                 let list = document.getElementById("quiz_list");
                 for(i=0; i < data.quizzes.length; i++){
-                    let temp = document.createElement("li");
+                    let temp = document.createElement("div");
+
+                    // temp.addEventListener("click", () => {
+                    //         document.getElementById(divName).style.display = "block";
+                    //         document.getElementById("button_container").style.display = "block";
+                    //         document.getElementById("quiz_container").style.display = "none";
+                    // }); 
+
                     let divName = "quiz_" + i;
                     temp.style.margin = "10px";
 
                     temp.innerHTML += "<b>" + data.quizzes[i].title + "</b><br>";
+                    temp.innerHTML += "ID: " + data.quizzes[i].id + "<br>";
 
                     if(data.quizzes[i].description) {
                         temp.innerHTML += data.quizzes[i].description + "<br>";
@@ -55,8 +67,7 @@
                     // hidden div for quiz and questions
                     var tempQuiz = document.createElement("div");
                     tempQuiz.id = "quiz_" + i;
-                    tempQuiz.style.display = "none";
-                    tempQuiz.innerHTML += "<h3>" + data.quizzes[i].title + "</h3>";
+                    tempQuiz.innerHTML += "<h3>" + data.quizzes[i].title + "</h3>"
                     tempQuiz.innerHTML += "<h2>" + data.quizzes[i].description;
                     var tempId = data.quizzes[i].id;
 
@@ -77,22 +88,25 @@
                         for(x=0; x < questionArray.length; x++){
                             questionDiv = document.createElement("div");
                             questionDiv.style.margin = "8px";
-                            questionDiv.innerHTML += "<b> Q" + (x + 1) + ")</b> " + questionArray[x].question + "<br>";
+                            questionDiv.innerHTML += "<b> Q" + (x + 1) + ")</b> " + questionArray[x].question + " <br>";
+                            questionDiv.innerHTML += "ID: " + questionArray[x].id + "<br>";
                             questionDiv.innerHTML += "<b> Answer: </b>" + questionArray[x].answer + "<br>";
                             questionDiv.innerHTML += "<b> Incorrect: </b>" + questionArray[x].incorrectOne + "<br>";
                             questionDiv.innerHTML += "<b> Incorrect: </b>" + questionArray[x].incorrectTwo + "<br>";
                             tempQuiz.appendChild(questionDiv);
                         }
                         document.getElementById("question_container").appendChild(tempQuiz);
-                        temp.addEventListener("click", (e) => {
-                            tempQuiz.style.display = "block";
-                            document.getElementById("button_container").style.display = "block";
-                            document.getElementById("quiz_container").style.display = "none";
-                        });  
+ 
                     });
-
                 }
             })
+        }
+
+        let showQuestions = () => {
+                document.getElementById("question_container").style.display = "block";
+                document.getElementById("show_questions").style.display = "none";
+                document.getElementById("button_container").style.display = "block";
+                document.getElementById("quiz_container").style.display = "none";
         }
 
         // returns Token cookie.
@@ -100,6 +114,68 @@
             return document.cookie;
         }
 
+        // handles deleting quiz from db and archive
+        let deleteQuiz = () => {
+            let quizId = document.getElementById("delete_id").value.trim();
+            const url =  baseServerUrl + "/quizzes/" + quizId;
+
+            let fetchData = {
+                method: 'DELETE',
+                headers: {
+                    'Accept' : '*/*',
+                    'x-auth-token' : getTokenCookie()
+                }
+            }
+            fetch(url, fetchData).then((res) => {
+                return res.json();
+            }).then((data) => {
+                
+                window.location.href = "./archive.html";
+            })
+        }
+
+        // handles deleting question from db and archive.
+        let deleteQuestion = () => {
+            let questionId = document.getElementById("delete_question_id").value.trim();
+            const url =  baseServerUrl + "/questions/" + questionId;
+
+            let fetchData = {
+                method: 'DELETE',
+                headers: {
+                    'Accept' : '*/*',
+                    'x-auth-token' : getTokenCookie()
+                }
+            }
+            fetch(url, fetchData).then((res) => {
+                return res.json();
+            }).then((data) => {
+                
+                window.location.href = "./archive.html";
+            })
+        }
+
+        let updateQuestion = () => {
+
+        }
+
     </script>
+    <style>
+
+        html, body {
+            height: 100%;
+        }
+
+        html {
+            display: table;
+            margin: auto;
+        }
+
+        body {
+            display: table-cell;
+            vertical-align: middle;
+        }
+
+    </style>
+ 
     </body>
 </html>

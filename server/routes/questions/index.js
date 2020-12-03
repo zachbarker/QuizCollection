@@ -88,9 +88,9 @@ router.put('/', (req, res, next) => {
 });
 
 // DELETE
-router.delete('/', (req, res, next) => {
+router.delete('/:id', (req, res, next) => {
     let userId = req.userId;
-    let questionId = req.body.questionId;
+    let questionId = req.params.id;
 
     db.query(`UPDATE Question SET deletedAt = CURRENT_TIMESTAMP WHERE id = ${questionId} AND userId = ${userId}`, 
         (err, result, fields) => {
