@@ -1,3 +1,9 @@
+/*
+    @swagger
+    tags: 
+        name: auth
+        description: authentication endpoints
+*/
 
 const { json } = require('express');
 const express = require('express');
@@ -7,7 +13,18 @@ var db = require('../../database/db');
 const bcrypt = require('bcrypt');
 
 
-// SIGN-IN --------------------------------------
+
+// SIGN-IN 
+/**
+ * @swagger
+ * /singin/:
+ *  post:
+ *      tags: [auth]
+ *      description: log in to user
+ *      responses: 
+ *          '200':
+ *              description: success!
+ */
 router.post('/signin', async (req, res, next) => {
 
     console.log("sign in called.");
@@ -40,6 +57,16 @@ router.post('/signin', async (req, res, next) => {
 });
 
 // SIGN-UP --------------------------------------
+/**
+ * @swagger
+ * /signup/:
+ *  post:
+ *      tags: [auth]
+ *      description: log in to user
+ *      responses: 
+ *          '200':
+ *              description: success!
+ */
 router.post('/signup', (req, res, next) => {
 
     // TODO - handle sign up logic with actual database

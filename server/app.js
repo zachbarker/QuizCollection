@@ -4,8 +4,35 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const cors = require('cors');
+const swaggerjsdoc = require('swagger-jsdoc');
+const swaggerui = require('swagger-ui-express');
+
+let swaggerDefinition = {
+  openapi: '3.0.0',
+  info: {
+    title: "nodeSwaggerApi",
+    version: "1.0.0",
+    description: "node swagger api"
+  },
+  tags: [
+    { name: "auth" },
+    { name: "questions"},
+    { name: "quizzes"}
+  ],
+  servers: [ {url: "ec2-52-15-165-251.us-east-2.compute.amazonaws.com/api/v1"} ],
+  basePath: "/",
+
+}
+
+let options = {
+  swaggerDefinition: swaggerDefinition,
+  apis: ["./routes/auth/index.js", "./routes/questions/index.js", "./routes/quizzes/index.js"],
+}
+
+let swaggerSpec = swaggerjsdoc(options);
 
 var indexRouter = require('./routes/index');
+const { json } = require('express');
 
 var app = express();
 
@@ -22,7 +49,11 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.options("*", cors());
 app.use(cors());
-app.use('/v1', indexRouter);
+
+app.use('/api-docs', swaggerui.serve, swaggerui.setup(swaggerSpec, {explore: true}));
+
+app.use('/api/v1', indexRouter);
+
 
 // catch 404 and forward to error handler
 app.use((req, res, next)  => {
@@ -39,5 +70,6 @@ app.use((err, req, res, next) => {
   res.status(err.status || 500);
   res.render('error');
 });
+
 
 module.exports = app;

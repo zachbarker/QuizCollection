@@ -8,6 +8,16 @@ var questionRouter = require('../questions/index');
 router.use('/:quizId/questions', questionRouter);
 
 // Returns the quiz for the given ID
+/**
+ * @swagger
+ * /quizzes/:quizId:
+ *  get:
+ *      tags: [quizzes]
+ *      description: gets quiz with given quizId from db.
+ *      responses: 
+ *          '200':
+ *              description: success!
+ */
 router.get('/:quizId', (req, res, next) => {
   const userId = req.userId;
   const quizId = req.params.quizId;
@@ -21,6 +31,16 @@ router.get('/:quizId', (req, res, next) => {
 });
 
 // Returns all quizzes when no quizId is specified
+/**
+ * @swagger
+ * /quizzes/:
+ *  get:
+ *      tags: [quizzes]
+ *      description: gets all quizzes for useerId from db.
+ *      responses: 
+ *          '200':
+ *              description: success!
+ */
 router.get('/', function(req, res, next) {
   const userId = req.userId;
   db.query(`SELECT * FROM Quiz WHERE userId = ${userId} AND deletedAt IS NULL`, (err, result, field) => {
@@ -33,6 +53,16 @@ router.get('/', function(req, res, next) {
 });
 
 // POST
+/**
+ * @swagger
+ * /quizzes/:
+ *  post:
+ *      tags: [quizzes]
+ *      description: gets quiz with given quizId from db.
+ *      responses: 
+ *          '200':
+ *              description: success!
+ */
 router.post('/', function(req, res, next){
   let title = req.body.title;
   let description = req.body.description;
@@ -60,6 +90,16 @@ router.post('/', function(req, res, next){
 
 
 // PUT (no id)
+/**
+ * @swagger
+ * /quizzes/:
+ *  put:
+ *      tags: [quizzes]
+ *      description: input quiz with given quizId to db.
+ *      responses: 
+ *          '200':
+ *              description: success!
+ */
 router.put('/', (req, res, next) => {
 
   let id = req.body.id;
@@ -80,6 +120,16 @@ router.put('/', (req, res, next) => {
 
 
 // PUT (with id)
+/**
+ * @swagger
+ * /questions/:id:
+ *  put:
+ *      tags: [quizzes]
+ *      description: update quiz with given quizId from db.
+ *      responses: 
+ *          '200':
+ *              description: success!
+ */
 router.put('/:id', (req, res, next) => {
 
   let id = req.params.id;
