@@ -8,7 +8,10 @@
 
             <div id="quiz_container">
                 <ul id="quiz_list">
-                    <span style="font-size: 20px; margin-right: 200px">Quizzes:</span> <button onclick="window.location.href='./create_quiz.html'">Add New Quiz </button></span>
+                    <span style="font-size: 20px; margin-right: 200px">Quizzes:</span> 
+                    <button onclick="window.location.href='./create_quiz.html'"> Add New Quiz </button>
+                    <button onclick="logout()">Log out</button><br><br>
+                    <button onclick="window.location.href='./update.html'"> Update Quiz or Question</button>
                 </ul>
             </div>
 
@@ -25,6 +28,7 @@
             </div>
 
         </div>
+
     <script>
 
         const baseServerUrl = 'http://localhost:4444/v1';
@@ -154,11 +158,18 @@
             })
         }
 
+        // handles updating a question
         let updateQuestion = () => {
 
         }
 
+        // handles logging out
+        let logout = () => {
+
+        }
+
     </script>
+
     <style>
 
         html, body {

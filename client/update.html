@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title> Update </title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+    </head>
+
+    <body>
+        <div id="main_container">
+
+            <div id="question_container">
+                <h2> Update a Question: </h2>
+                <label>Enter ID of question: </label><input id="id_input" type="text"><br>
+                <label>Enter new correct answer: </label> <input id="answer_input" type="text"><br>
+                <label>Enter new incorrect one answer: </label><input id="incorrect1_input" type="text"><br>
+                <label>Enter new incorrect two answer</label><input id="incorrect2_input" type="text"><br>
+                <button id="update_question" onclick="updateQuestion()">Update Question</button> <br>
+            </div>
+
+            <div id="quiz_container">
+                <h2> Update a Quiz: </h2>
+                <label>Enter ID of a quiz: </label><input id="quiz_input" type="text"><br>
+                <label>Enter new title for quiz: </label><input id="title_input" type="text"><br>
+                <label>Enter new description for quiz: </label><input id="description_input" type="text"><br>
+                <button id="update_quiz" onclick="updateQuiz()">Update Quiz</button>
+            </div>
+
+            <button id="return" onclick="window.location.href='./archive.html'">Return to Archive</button>
+
+        </div>
+
+        <script>
+
+            const baseServerUrl = 'http://localhost:4444/v1';
+
+            // returns Token cookie.
+            let getTokenCookie = () => {
+                return document.cookie;
+            }
+
+            // handles updating a question
+            let updateQuestion = () => {
+                let id = document.getElementById("id_input").value.trim();
+                let answer = document.getElementById("answer_input").value.trim();
+                let incorrect_one = document.getElementById("incorrect1_input").value.trim();
+                let incorrect_two = document.getElementById("incorrect2_input").value.trim();
+
+                const url =  baseServerUrl + "/questions/" + id;
+
+                let data = {
+                    quizId: id,
+                    answer: answer,
+                    incorrectOne: incorrect_one,
+                    incorrectTwo: incorrect_two
+                }
+
+                const formBody = Object.keys(data).map(key => encodeURIComponent(key) + '=' + encodeURIComponent(data[key])).join('&');
+
+
+                let fetchData = {
+                    method: 'PUT',
+                    body: formBody,
+                    headers: {
+                        'Accept' : '*/*',
+                        'x-auth-token' : getTokenCookie(),
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    }
+                }
+                fetch(url, fetchData).then((res) => {
+                    return res.json();
+                }).then((data) => {
+                    
+                    window.location.href = "./update.html";
+                })
+            }
+
+
+            // handles updating a quiz
+            let updateQuiz = () => {
+                let id = document.getElementById("quiz_input").value.trim();
+                let title = document.getElementById("title_input").value.trim();
+                let description = document.getElementById("description_input").value.trim();
+
+                const url =  baseServerUrl + "/quizzes/" + id;
+
+                let data = {
+                    id: id,
+                    title: title,
+                    description: description,
+                }
+
+                const formBody = Object.keys(data).map(key => encodeURIComponent(key) + '=' + encodeURIComponent(data[key])).join('&');
+
+
+                let fetchData = {
+                    method: 'PUT',
+                    body: formBody,
+                    headers: {
+                        'Accept' : '*/*',
+                        'x-auth-token' : getTokenCookie(),
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    }
+                }
+                fetch(url, fetchData).then((res) => {
+                    return res.json();
+                }).then((data) => {
+                    
+                    window.location.href = "./update.html";
+                })
+
+            }
+
+        </script>
+        <style>
+
+            html, body {
+                height: 100%;
+            }
+
+            html {
+                display: table;
+                margin: auto;
+            }
+
+            body {
+                display: table-cell;
+                vertical-align: middle;
+            }
+
+        </style>
+    </body>
+</html>

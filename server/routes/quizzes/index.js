@@ -58,9 +58,44 @@ router.post('/', function(req, res, next){
   }
 });
 
-// PUT
+
+// PUT (no id)
 router.put('/', (req, res, next) => {
-  res.json({data: "this is a PUT request"});
+
+  let id = req.body.id;
+  let userId = req.userId;
+  let title = req.body.title;
+  let description = req.body.title;
+
+  
+  db.query(`UPDATE Quiz SET title = '${title}', description = '${description}' WHERE id = ${id} AND userId = ${userId} AND deletedAt IS NULL;`, 
+           (err, result, fields) => {
+              if(err){
+                  throw(err);
+                } else {
+                  res.json({updatedId: id});
+                }
+  })
+});
+
+
+// PUT (with id)
+router.put('/:id', (req, res, next) => {
+
+  let id = req.params.id;
+  let userId = req.userId;
+  let title = req.body.title;
+  let description = req.body.title;
+
+  
+  db.query(`UPDATE Quiz SET title = '${title}', description = '${description}' WHERE id = ${id} AND userId = ${userId} AND deletedAt IS NULL;`, 
+           (err, result, fields) => {
+              if(err){
+                  throw(err);
+                } else {
+                  res.json({updatedId: id});
+                }
+  })
 });
 
 // DELETE
