@@ -105,7 +105,7 @@ router.put('/', (req, res, next) => {
   let id = req.body.id;
   let userId = req.userId;
   let title = req.body.title;
-  let description = req.body.title;
+  let description = req.body.description;
 
   
   db.query(`UPDATE Quiz SET title = '${title}', description = '${description}' WHERE id = ${id} AND userId = ${userId} AND deletedAt IS NULL;`, 
@@ -152,7 +152,7 @@ router.put('/:id', (req, res, next) => {
 /**
  * @swagger
  * /quizzes/:id:
- *  deletee:
+ *  delete:
  *      tags: [quizzes]
  *      description: delete a quiz with given quizId from db.
  *      responses: 
@@ -176,7 +176,7 @@ router.delete('/:id', (req, res, next) => {
 // PATCH
 /**
  * @swagger
- * /quizzes/:
+ * /quizzes/:id:
  *  patch:
  *      tags: [quizzes]
  *      description: update quiz with given quizId.
@@ -184,8 +184,20 @@ router.delete('/:id', (req, res, next) => {
  *          '200':
  *              description: success!
  */
-router.patch('/', (req, res, next) => {
-  res.json({data: "this is a PATCH request"});
+router.patch('/:id', (req, res, next) => {
+  let id = req.params.id;
+  let userId = req.userId;
+  let title = req.body.title;
+  let description = req.body.title;
+
+  db.query(`UPDATE Quiz SET title = '${title}', description = '${description}' WHERE id = ${id} AND userId = ${userId} AND deletedAt IS NULL;`, 
+           (err, result, fields) => {
+              if(err){
+                  throw(err);
+                } else {
+                  res.json({updatedId: id});
+                }
+  })
 });
 
 module.exports = router;
