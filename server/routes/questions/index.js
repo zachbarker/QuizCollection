@@ -3,6 +3,16 @@ var router = express.Router({mergeParams: true});
 var db = require('../../database/db');
 
 // GET
+/**
+ * @swagger
+ * /questions/:
+ *  get:
+ *      tags: [questions]
+ *      description: get question with given userId from db.
+ *      responses: 
+ *          '200':
+ *              description: success!
+ */
 router.get('/', (req, res, next) => {
 
     let userId = req.userId;
@@ -29,6 +39,16 @@ router.get('/', (req, res, next) => {
 });
 
 // POST
+/**
+ * @swagger
+ * /questions/:
+ *  post:
+ *      tags: [questions]
+ *      description: update question with extracted questionId from db.
+ *      responses: 
+ *          '200':
+ *              description: success!
+ */
 router.post('/', (req, res, next) => {
   let question = req.body.question;
   let answer = req.body.answer;
@@ -52,6 +72,16 @@ router.post('/', (req, res, next) => {
 });
 
 // PUT (UPDATE)
+/**
+ * @swagger
+ * /questions/:questionId:
+ *  put:
+ *      tags: [questions]
+ *      description: update question with given questionId from db.
+ *      responses: 
+ *          '200':
+ *              description: success!
+ */
 router.put('/:questionId', (req, res, next) => {
     let questionId = req.params.questionId;
     let userId = req.userId;
@@ -70,6 +100,16 @@ router.put('/:questionId', (req, res, next) => {
 });
 
 // PUT (INSERT)
+/**
+ * @swagger
+ * /questions/:
+ *  put:
+ *      tags: [questions]
+ *      description: update question with extracted questionId from db.
+ *      responses: 
+ *          '200':
+ *              description: success!
+ */
 router.put('/', (req, res, next) => {
     let questionId = req.body.questionId;
     let userId = req.userId;
@@ -88,6 +128,16 @@ router.put('/', (req, res, next) => {
 });
 
 // DELETE
+/**
+ * @swagger
+ * /questions/:id:
+ *  delete:
+ *      tags: [questions]
+ *      description: deleete question with given questionId from db.
+ *      responses: 
+ *          '200':
+ *              description: success!
+ */
 router.delete('/:id', (req, res, next) => {
     let userId = req.userId;
     let questionId = req.params.id;

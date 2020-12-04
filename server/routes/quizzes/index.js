@@ -122,7 +122,7 @@ router.put('/', (req, res, next) => {
 // PUT (with id)
 /**
  * @swagger
- * /questions/:id:
+ * /quizzes/:id:
  *  put:
  *      tags: [quizzes]
  *      description: update quiz with given quizId from db.
@@ -149,6 +149,16 @@ router.put('/:id', (req, res, next) => {
 });
 
 // DELETE
+/**
+ * @swagger
+ * /quizzes/:id:
+ *  deletee:
+ *      tags: [quizzes]
+ *      description: delete a quiz with given quizId from db.
+ *      responses: 
+ *          '200':
+ *              description: success!
+ */
 router.delete('/:id', (req, res, next) => {
   let userId = req.userId;
   let quizId = req.params.id;
@@ -164,6 +174,16 @@ router.delete('/:id', (req, res, next) => {
 });
 
 // PATCH
+/**
+ * @swagger
+ * /quizzes/:
+ *  patch:
+ *      tags: [quizzes]
+ *      description: update quiz with given quizId.
+ *      responses: 
+ *          '200':
+ *              description: success!
+ */
 router.patch('/', (req, res, next) => {
   res.json({data: "this is a PATCH request"});
 });
